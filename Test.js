@@ -10,7 +10,9 @@ const urls = [
     { url: 'https://steamcommunity.com/market/search?descriptions=1&q=Kinetic%3A+When+Nature+Attacks#p1_price_asc', minPrice: 0, maxPrice: 0.2 },
     { url: 'https://steamcommunity.com/market/search?descriptions=1&q=Kinetic%3A+Ambience+of+Reminiscence', minPrice: 0, maxPrice: 0.58 },
     { url: 'https://steamcommunity.com/market/search?q=Kinetic%3A+Twister&descriptions=1', minPrice: 0, maxPrice: 1.61},
-    { url: 'https://steamcommunity.com/market/search?descriptions=1&q=Inscribed+Torchbearer', minPrice: 0, maxPrice: 0.45},
+    { url: 'https://steamcommunity.com/market/search?descriptions=1&q=Inscribed+Torchbearer', minPrice: 0, maxPrice: 0.48},
+    { url: 'https://steamcommunity.com/market/search?q=Inscribed+Coup+de+Grace+Crits&descriptions=1#p1_price_asc', minPrice: 0, maxPrice: 0.33},
+    { url: 'https://steamcommunity.com/market/search?q=Inscribed+Dagger+Crits&descriptions=1#p1_price_asc', minPrice: 0, maxPrice: 0.15},
 
     // Додайте інші силки тут з відповідними параметрами
 ];
@@ -19,17 +21,17 @@ async function fetchData() {
     const items = [];
 
     // Цикл для кожної силки
-    for (const { url, minPrice, maxPrice } of urls) {
+    const promises = urls.map(async ({ url, minPrice, maxPrice }) => {
         try {
             const response = await axios.get(url);
             const html = response.data;
             const $ = cheerio.load(html);
 
-            const promises = $('.market_listing_row').map(async (index, element) => {
+            const rowPromises = $('.market_listing_row').map(async (index, element) => {
                 const name = $(element).find('.market_listing_item_name_block').text().trim();
                 const priceElement = $(element).find('.normal_price');
 
-                await new Promise(resolve => setTimeout(resolve, 30000));
+                await new Promise(resolve => setTimeout(resolve, 35000));
 
                 const rawPrice = priceElement.length ? priceElement.text().trim() : 'N/A';
                 const price = parseFloat(rawPrice.replace(/[^\d.-]/g, ''));
@@ -40,11 +42,13 @@ async function fetchData() {
                 }
             }).get();
 
-            await Promise.all(promises);
+            await Promise.all(rowPromises);
         } catch (error) {
             console.error(`Error fetching data from ${url}:`, error.message);
         }
-    }
+    });
+
+    await Promise.all(promises);
 
     // Сортування за ціною від найменшого до найбільшого
     items.sort((a, b) => a.price - b.price);
@@ -71,7 +75,7 @@ app.get('/', async (req, res) => {
         const htmlTable = await fetchData();
 
         // Додайте параметр meta для автооновлення кожні 10 секунд
-        const autoRefreshMeta = '<meta http-equiv="refresh" content="30">';
+        const autoRefreshMeta = '<meta http-equiv="refresh" content="55">';
 
         // Додайте параметр meta до HTML-коду перед відправкою відповіді
         const responseHtml = `<html><head>${autoRefreshMeta}</head><body>${htmlTable}</body></html>`;
@@ -83,11 +87,10 @@ app.get('/', async (req, res) => {
 });
 
 // Задайте інтервал автооновлення даних кожні 30 секунд
-const updateInterval = 30 * 3000; // 30 seconds
+const updateInterval = 30 * 5000; // 30 seconds
 setInterval(async () => {
     console.log('Updating data...');
     const htmlTable = await fetchData();
-    // TODO: Можливо, ви хочете відправити ці дані клієнту або оновити кеш
 }, updateInterval);
 
 app.listen(PORT, () => {
