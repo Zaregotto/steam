@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market Data</title>
+    <script>
+        const socket = new WebSocket('ws://localhost:3000');
+
+        socket.addEventListener('message', (event) => {
+            const items = JSON.parse(event.data);
+            // Ваш код для оновлення таблиці та відображення повідомлення
+            console.log('Updated data:', items);
+
+            // Повідомлення і звук при появі нового елемента в таблиці
+            if (items.length > 0) {
+                alert('New item added!');
+                // Ваш код для відтворення звуку
+                // Наприклад, можна використовувати HTML5 Audio API:
+                // const audio = new Audio('path/to/sound.mp3');
+                // audio.play();
+            }
+        });
+
+        socket.addEventListener('close', () => {
+            console.log('Connection closed');
+        });
+    </script>
+</head>
+<body>
+<!-- Ваш код для відображення таблиці даних -->
+<table id="data-table">
+    <!-- Тут буде виводитися таблиця -->
+</table>
+</body>
+</html>
