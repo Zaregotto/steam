@@ -3,22 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Таблиця з оновленням і звуком</title>
+    <title>Динамічна таблиця</title>
+    <link rel="stylesheet" href="Header.css">
 </head>
 <body>
-<link rel="stylesheet" href="Header.css">
-<h2>Таблиця з оновленням і звуком</h2>
 
+<h2>Динамічна таблиця</h2>
 
-    <div>
-        <span class="normal_price">Ціна</span>
-        <div class="market_listing_item_name_block">Назва предмету</div>
-        <img src="шлях/до/зображення.jpg">
-    </div>
+<table id="dynamicTable">
+    <thead>
+    <tr>
+        <th>Адаптивний номер<span class="asc"></span></th>
+        <th >Ім'я<span class="asc"></span></th>
+        <th onclick="sortTable(2)">Ціна<span class="asc"></span></th>
+        <th>Ссилка</th>
+    </tr>
+    </thead>
+</table>
 
-<button class="update-button" onclick="updateTable()">Оновити</button>
-
-<audio id="notificationSound" src="Png_and_mp3/stalker-zvuk-kpk.mp3"></audio>
-<script src="AutoUpdate.js"></script>
+<audio id="notificationSound" src="Png_and_mp3/stalker-zvuk-kpk.mp3"> fsf</audio>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="Sorts.js">
+</script>
 </body>
 </html>

@@ -1,24 +1,35 @@
-const request = require('request');
 const cheerio = require('cheerio');
+const request = require('request');
 
-const html = '<div><span class="normal_price">Ціна</span><div class="market_listing_item_name_block">Назва предмету</div><img src="шлях/до/зображення.jpg"></div>';
-const $ = cheerio.load(html);
+// Посилання на ваші сторінки
+const urls = [
+    'https://steamcommunity.com/market/search?q=Kinetic%3A+Ambience+of+Reminiscence&descriptions=1#p1_price_asc',
+    'https://steamcommunity.com/market/search?descriptions=1&q=Kinetic%3A+Turbulent+Teleport#p1_price_asc',
+    'https://steamcommunity.com/market/search?descriptions=1&q=Kinetic%3A+When+Nature+Attacks#p1_price_asc'
+];
 
-// URL Steam Market
-const steamMarketURL = 'https://steamcommunity.com/market/search?q=Kinetic%3A+Twin+Deaths%27+Haunting&descriptions=1';
+// Функція для парсингу інформації з кожного посилання
+function parseUrl(urls) {
+    request(urls, (error, response, html) => {
+        if (!error && response.statusCode === 200) {
+            const $ = cheerio.load(html);
 
-// Відправка HTTP-запиту та отримання HTML-коду сторінки
-request(steamMarketURL, (error, response, html) => {
-    if (!error && response.statusCode === 200) {
-        // Завантаження HTML-коду в об'єкт Cheerio
-        const $ = cheerio.load(html);
+            // Отримання інформації
+            const normalPrice = $('.normal_price').text();
+            const itemName = $('.market_listing_item_name_block').text();
+            const imageSrc = $('img').attr('src');
 
-        const normalPrice = $('.normal_price').text();
-        const itemName = $('.market_listing_item_name_block').text();
-        const imageSrc = $('img').attr('src');
+            // Виведення результатів
+            console.log(`URL: ${urls}`);
+            console.log(`Ціна: ${normalPrice}`);
+            console.log(`Назва предмету: ${itemName}`);
+            console.log(`Шлях до зображення: ${imageSrc}`);
+            console.log('---');
+        } else {
+            console.error(`Помилка при отриманні сторінки: ${urls}`);
+        }
+    });
+}
 
-        console.log(`Ціна: ${normalPrice}`);
-        console.log(`Назва предмету: ${itemName}`);
-        console.log(`Шлях до зображення: ${imageSrc}`);
-    }
-});
+// Виклик функції парсингу для кожного посилання
+urls.forEach(parseUrl);
