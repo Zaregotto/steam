@@ -4,20 +4,7 @@ const axios = require('axios');
 
 const app = express();
 const PORT = 3000;
-
-// Масив силок з параметрами minPrice і maxPrice
-const urls = [
-    { url: 'https://steamcommunity.com/market/search?descriptions=1&q=Kinetic%3A+When+Nature+Attacks#p1_price_asc', minPrice: 0.01, maxPrice: 0.2 },
-    { url: 'https://steamcommunity.com/market/search?descriptions=1&q=Kinetic%3A+Ambience+of+Reminiscence', minPrice: 0.01, maxPrice: 0.58 },
-    { url: 'https://steamcommunity.com/market/search?q=Kinetic%3A+Twister&descriptions=1', minPrice: 0.01, maxPrice: 1.61},
-    { url: 'https://steamcommunity.com/market/search?descriptions=1&q=Inscribed+Torchbearer', minPrice: 0.01, maxPrice: 0.48},
-    { url: 'https://steamcommunity.com/market/search?q=Inscribed+Coup+de+Grace+Crits&descriptions=1#p1_price_asc', minPrice: 0.01, maxPrice: 0.33},
-    { url: 'https://steamcommunity.com/market/search?q=Inscribed+Dagger+Crits&descriptions=1#p1_price_asc', minPrice: 0.01, maxPrice: 0.15},
-    { url: 'https://steamcommunity.com/market/search?q=kinetic+trapper%27s+treachery&descriptions=1#p1_price_asc', minPrice: 0.01, maxPrice: 1 },
-    { url: 'https://steamcommunity.com/market/search?q=Warlock%27s+Summoning+Scroll&descriptions=1', minPrice: 0.01, maxPrice: 0.16 },
-
-    // Додайте інші силки тут з відповідними параметрами
-];
+const urls = require('./urls')
 
 const notificationSound = 'https://mp3folderx.org.ua/download/46725/9429546.mp3';
 
@@ -35,7 +22,7 @@ async function fetchData() {
                 const name = $(element).find('.market_listing_item_name_block').text().trim();
                 const priceElement = $(element).find('.normal_price');
 
-                await new Promise(resolve => setTimeout(resolve, 5000));
+                await new Promise(resolve => setTimeout(resolve, 40000));
 
                 const rawPrice = priceElement.length ? priceElement.text().trim() : 'N/A';
                 const price = parseFloat(rawPrice.replace(/[^\d.-]/g, ''));
@@ -86,8 +73,8 @@ app.get('/', async (req, res) => {
     try {
         const htmlTable = await fetchData();
 
-        // Додайте параметр meta для автооновлення кожні 180 секунд
-        const autoRefreshMeta = '<meta http-equiv="refresh" content="222">';
+        // Додайте параметр meta для автооновлення кожні 280 секунд
+        const autoRefreshMeta = '<meta http-equiv="refresh" content="300">';
 
         // Додайте параметр meta до HTML-коду перед відправкою відповіді
         const responseHtml = `<html><head>${autoRefreshMeta}</head><body>${htmlTable}</body></html>`;
@@ -99,11 +86,11 @@ app.get('/', async (req, res) => {
 });
 
 // Задайте інтервал автооновлення даних кожні 180 секунд
-const updateInterval = 180 * 1000; // 180 seconds
+/*const updateInterval = 200 * 1000; // 180 seconds
 setInterval(async () => {
     console.log('Updating data...');
     const htmlTable = await fetchData();
-}, updateInterval);
+}, updateInterval);*/
 
 app.listen(PORT, () => {
     console.log(`Server is running at http://localhost:${PORT}`);
