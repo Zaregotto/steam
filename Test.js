@@ -22,7 +22,7 @@ async function fetchData() {
                 const name = $(element).find('.market_listing_item_name_block').text().trim();
                 const priceElement = $(element).find('.normal_price');
 
-                await new Promise(resolve => setTimeout(resolve, 40000));
+                await new Promise(resolve => setTimeout(resolve, 5000));
 
                 const rawPrice = priceElement.length ? priceElement.text().trim() : 'N/A';
                 const price = parseFloat(rawPrice.replace(/[^\d.-]/g, ''));

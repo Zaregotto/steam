@@ -15,4 +15,5 @@ module.exports = [
     { url: 'https://steamcommunity.com/market/search?descriptions=1&q=Kinetic%3A+Epitaphic+Trap#p1_price_asc', minPrice: 0.01, maxPrice: 0.13}, //Kinetic: Epitaphic Trap
     { url: 'https://steamcommunity.com/market/search?descriptions=1&q=Kinetic%3A+Twin+Deaths%27+Haunting#p1_price_asc', minPrice: 0.01, maxPrice: 0.09}, // Kinetic: Twin Deaths' Haunting
     { url: 'https://steamcommunity.com/market/search?q=Kinetic%3A+Bladekeeper%27s+Bladefury&descriptions=1#p1_price_asc', minPrice: 0, maxPrice: 0.59}, //Kinetic: Bladekeeper's Bladefury
+    { url: 'https://steamcommunity.com/market/search?q=Kinetic%3A+Free+to+Fear&descriptions=1#p1_price_asc', minPrice: 0, maxPrice: 1.49}, // Kinetic: Free to Fear
 ];
